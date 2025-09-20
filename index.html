@@ -1,390 +1,395 @@
-<!doctype html>
-<html lang="hi">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Advanced Lab Software</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <style>
-:root {
-  --bg: #f6f8fb;
-  --card: #fff;
-  --muted: #6b7280;
-  --accent: #0f172a;
-  --success: #059669;
-  --danger: #ef4444;
-  --warning: #f59e0b;
-  --primary: #004aad;   /* Premium Blue */
-  --secondary: #eab308; /* Gold Accent */
-}
-
-* {
-  box-sizing: border-box;
-  font-family: 'Inter', 'Segoe UI', system-ui, Arial, sans-serif;
-}
-
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--accent);
-}
-
-/* ----- HEADER ----- */
-header {
-  position: sticky;
-  top: 0;
-  width: 100%;
-  background: var(--primary);  /* full width blue strip */
-  color: #fff;
-  z-index: 10;
-}
-
-header .bar {
-  max-width: 1200px;  /* content limited */
-  margin: 0 auto;     /* center aligned */
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 20px;
-  width: 100%;        /* ✅ ensure it fills available space */
-}
-
-header .title {
-  font-weight: 700;
-  font-size: 20px;
-  letter-spacing: 0.4px;
-}
-
-header .controls button {
-  background: var(--secondary);
-  color: #000;
-  border: none;
-  font-weight: 600;
-  padding: 8px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-/* ----- MAIN LAYOUT ----- */
-main {
-  max-width: 1200px;
-  margin: 20px auto;
-  padding: 0 16px;
-  display: grid;
-  grid-template-columns: 1fr 420px;
-  gap: 20px;
-}
-
-.card {
-  background: var(--card);
-  padding: 18px;
-  border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
-}
-
-h2 {
-  margin: 0 0 12px;
-  font-size: 18px;
-  color: var(--primary);
-  border-bottom: 2px solid var(--secondary);
-  padding-bottom: 4px;
-}
-
-label {
-  display: block;
-  margin-top: 10px;
-  font-size: 13px;
-  color: var(--muted);
-}
-
-input, select, textarea {
-  width: 100%;
-  padding: 10px;
-  margin-top: 6px;
-  border-radius: 8px;
-  border: 1px solid #e6e9ef;
-  font-size: 14px;
-  background: #fff;
-}
-
-textarea {
-  min-height: 72px;
-  resize: vertical;
-}
-
-.row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.controls {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-top: 12px;
-}
-
-button {
-  padding: 10px 14px;
-  border-radius: 8px;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-button.primary { background: var(--primary); color: #fff; }
-button.secondary { background: var(--secondary); color: #000; }
-button.ghost { background: #fff; color: var(--accent); border: 1px solid #e6e9ef; }
-
-/* ----- TABLE ----- */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-  font-size: 14px;
-}
-
-th, td {
-  padding: 8px 10px;
-  border: 1px solid #e5e7eb;
-  text-align: left;
-  vertical-align: top;
-}
-
-th {
-  font-weight: 600;
-  background: var(--primary);
-  color: #fff;
-}
-
-tbody tr:nth-child(even) {
-  background: #f9fafb;
-}
-
-/* Flags */
-.flag {
-  font-weight: 600;
-  padding: 3px 10px;
-  border-radius: 999px;
-  font-size: 12px;
-}
-
-.flag.low { background: rgba(239,68,68,.1); color: var(--danger); }
-.flag.normal { background: rgba(5,150,105,.12); color: var(--success); }
-.flag.high { background: rgba(245,158,11,.15); color: var(--warning); }
-
-/* ----- REPORT PREVIEW ----- */
-.preview {
-  overflow: auto;
-  max-height: 78vh;
-}
-
-.report {
-  width: 100%;
-  padding: 20px;
-  border-radius: 12px;
-  background: #fff;
-}
-
-.report h3 {
-  margin: 0;
-  color: var(--primary);
-}
-
-.meta {
-  display: flex;
-  gap: 14px;
-  flex-wrap: wrap;
-  margin-top: 8px;
-}
-
-.meta div {
-  font-size: 13px;
-  color: var(--muted);
-}
-
-.legend, .notice {
-  font-size: 12px;
-  color: var(--muted);
-  margin-top: 6px;
-}
-
-.sectionTitle {
-  margin: 12px 0 6px;
-  font-weight: 700;
-}
-
-/* ----- FOOTER ----- */
-footer {
-  text-align: center;
-  font-size: 13px;
-  color: var(--muted);
-  margin-top: 20px;
-}
-
-footer::before {
-  content: "—— End of Report ——";
-  display: block;
-  font-weight: 600;
-  margin-bottom: 6px;
-  color: var(--secondary);
-}
-
-/* ----- RESPONSIVE ----- */
-@media(max-width: 980px) {
-  main { grid-template-columns: 1fr; }
-  .preview { max-height: none; }
-}
-
-@media(max-width: 600px) {
-  body { font-size: 14px; }
-
-  header .bar { flex-direction: column; align-items: flex-start; gap: 8px; }
-
-  .card { padding: 14px; border-radius: 10px; }
-
-  input, select { font-size: 13px; padding: 8px; }
-
-  button { width: 100%; margin-top: 8px; }
-
-  table { display: block; overflow-x: auto; white-space: nowrap; border-radius: 8px; }
-  th, td { font-size: 13px; padding: 8px 6px; }
-}
-</style>
-</head>
-<body>
-  <header>
-    <div class="bar">
-      <div class="title">🧪 Lab Report — Advanced</div>
-      <div class="controls">
-        <button class="ghost" id="btnHome">Home</button>
-        <button class="ghost" id="btnForm">Form</button>
-        <button class="ghost" id="btnReset">Reset</button>
-      </div>
-    </div>
-  </header>
-
-  <main>
-    <!-- LEFT: App Panels -->
-    <section class="card" id="panelHome">
-      <h2>Index — Patient Details & Test Selection</h2>
-      <div class="row">
-        <div>
-          <label>Patient Name</label>
-          <input id="p_name" placeholder="Patient ka naam" />
-        </div>
-        <div>
-          <label>Patient ID / Reg. No.</label>
-          <input id="p_id" placeholder="ID / MRN" />
-        </div>
-      </div>
-      <div class="row">
-        <div>
-          <label>Age (years)</label>
-          <input id="p_age" type="number" min="0" placeholder="e.g. 35" />
-        </div>
-        <div>
-          <label>Gender</label>
-          <select id="p_gender">
-            <option value="">-- Select Gender --</option>
-            <option value="M">Male</option>
-            <option value="F">Female</option>
-          </select>
-        </div>
-      </div>
-      <div class="row">
-        <div>
-          <label>Collection Date</label>
-          <input id="p_date" type="date" />
-        </div>
-        <div>
-          <label>Select Test</label>
-          <select id="p_test">
-            <option value="">-- Select Test --</option>
-            <option value="CBC">CBC — Complete Blood Count</option>
-            <option value="LFT">LFT — Liver Function Test</option>
-            <option value="KFT">KFT — Kidney/Renal Function Test</option>
-            <option value="LIPID">Lipid Profile</option>
-            <option value="TFT">Thyroid Function (TFT)</option>
-            <option value="GLU">Glucose Panel</option>
-            <option value="ELEC">Electrolytes</option>
-            <option value="URINE">Urine R/E</option>
-            <option value="IRON">Iron Studies</option>
-            <option value="INFL">Inflammatory Markers (CRP/ESR)</option>
-          </select>
-        </div>
-      </div>
-      <label>Ref. By (Doctor / Clinic) — optional</label>
-      <input id="p_ref" placeholder="Dr. Name, Clinic" />
-
-      <div class="controls">
-        <button id="saveProceed">Proceed to Form →</button>
-        <button class="secondary" id="saveOnly">Save</button>
-      </div>
-      <div class="notice">Yahaan save karne par sab details <b>localStorage</b> me store hongi aur Form panel me auto-load ho jayengi.</div>
-    </section>
-
-    <section class="card hidden" id="panelForm">
-      <h2 id="formHeading">Form — </h2>
-      <div class="row">
-        <div>
-          <label>Selected Test</label>
-          <input id="sel_test" disabled />
-        </div>
-        <div>
-          <label>Patient</label>
-          <input id="sel_patient" disabled />
-        </div>
-      </div>
-      <div id="paramsArea" style="margin-top:8px"></div>
-      <div class="controls">
-        <button id="fillExample">Fill Example</button>
-        <button class="secondary" id="clearValues">Clear</button>
-        <button id="downloadPdf">Download PDF</button>
-        <button class="ghost" id="backToHome">← Back</button>
-      </div>
-    </section>
-
-    <!-- RIGHT: Live Preview -->
-    <aside class="card preview" id="panelPreview">
-      <div class="report" id="reportPreview">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div>
-            <h3 id="rep_title" style="text-align:center">LOGO</h3>
-            <div style="font-size:12px;color:var(--muted)">Your Lab Name • Address • Contact</div>
-          </div>
-          <div class="legend">Report Date: <span id="rep_date"></span></div>
-        </div>
-        <div class="meta" style="margin-top:8px">
-          <div id="rep_patient">Patient: -</div>
-          <div id="rep_age">Age: -</div>
-          <div id="rep_gender">Gender: -</div>
-          <div id="rep_id">Reg. No: -</div>
-          <div id="rep_test">Test: -</div>
-          <div id="rep_ref" class="subtle">Ref. By: -</div>
-        </div>
-        <hr style="margin:12px 0;border:none;border-top:2px solid #111" />
-        <div id="sectionTitle" class="sectionTitle"></div>
-        <div id="resultTableHolder"><div class="legend">Select a test & enter values…</div></div>
-        <div style="margin-top:10px" class="legend">Legend: <span class="flag low">Low</span> <span class="flag normal">Normal</span> <span class="flag high">High</span></div>
-        <div style="margin-top:18px;font-size:13px;color:var(--muted)">Interpretation: Values are compared with reference intervals based on age/gender where applicable.</div>
-        <div style="margin-top:24px;display:flex;justify-content:space-between;align-items:end">
-          <div class="legend">-------------------------- End of Report --------------------------</div>
-          <div style="text-align:right">
-            <div style="height:38px"></div>
-            <div style="font-size:13px;color:var(--muted)">Authorized Signatory</div>
-          </div>
-        </div>
-      </div>
-    </aside>
-  </main>
-
-  <script>
-    // ====================== CONFIG: TESTS & RANGES ==========================
-    // Helper predicates for bands (age/gender-wise ranges)
-    function always(){ return (g,a)=>true }
-    function gA(gender, minAge=0){ return (g,a)=> g===gender && a>=minAge }
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Pathology Lab Report Generator</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+            body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F5F5F5;
+            color: #424242;
+            }
+            .lab-header {
+            background-color: #1A237E;
+            color: white;
+            padding: 1.5rem 0;
+            border-bottom: 5px solid #42A5F5;
+            }
+            .lab-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            }
+            .card {
+            border-radius: 0.75rem;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+            border: none;
+            }
+            .report-preview {
+            position: sticky;
+            top: 1.5rem;
+            height: calc(100vh - 3rem);
+            overflow-y: auto;
+            }
+            .report-card {
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            }
+            .value-low {
+            color: #42A5F5;
+            font-weight: 600;
+            }
+            .value-high {
+            color: #EF5350;
+            font-weight: 600;
+            }
+            .table th {
+            background-color: #E0E0E0;
+            color: #212121;
+            }
+            .table thead {
+            border-bottom: 2px solid #bdbdbd;
+            }
+            .form-control, .form-select {
+            border-radius: 0.5rem;
+            border: 1px solid #E0E0E0;
+            transition: all 0.2s;
+            }
+            .form-control:focus, .form-select:focus {
+            box-shadow: 0 0 0 0.25rem rgba(66, 165, 245, 0.25);
+            border-color: #42A5F5;
+            }
+            .btn-primary {
+            background-color: #1A237E;
+            border-color: #1A237E;
+            font-weight: 600;
+            transition: background-color 0.2s, transform 0.2s;
+            }
+            .btn-primary:hover {
+            background-color: #283593;
+            transform: translateY(-2px);
+            }
+            .btn-secondary {
+            background-color: #757575;
+            border-color: #757575;
+            font-weight: 600;
+            }
+            .btn-secondary:hover {
+            background-color: #616161;
+            }
+            .btn-outline-secondary {
+            border-color: #9E9E9E;
+            color: #616161;
+            }
+            .btn-outline-secondary:hover {
+            background-color: #e0e0e0;
+            color: #424242;
+            }
+            footer {
+            margin-top: 3rem;
+            padding: 2rem 0;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #6c757d;
+            border-top: 1px solid #e0e0e0;
+            }
+            @media (max-width: 991.98px) {
+            .report-preview {
+            position: static;
+            height: auto;
+            margin-top: 1.5rem;
+            }
+            }
+            @media print {
+            body { background: white !important; }
+            #footnote{ display: none !important; }
+            .lab-header { 
+            position: static !important; 
+            background: #1A237E !important; 
+            color: white !important; 
+            border-bottom: 5px solid #42A5F5 !important;
+            }
+            main .row > .col-lg-7 { display: none !important; }
+            main .row > .col-lg-5 { 
+            flex: 0 0 100% !important; 
+            max-width: 100% !important; 
+            width: 100% !important;
+            }
+            .report-preview { 
+            position: static !important; 
+            height: auto !important; 
+            top: auto !important;
+            }
+            #previewContent { 
+            box-shadow: none !important; 
+            border: none !important; 
+            padding: 1rem !important;
+            background: white !important;
+            }
+            footer { 
+            position: static !important; 
+            border-top: 1px solid #e0e0e0 !important; 
+            color: #6c757d !important;
+            page-break-inside: avoid;
+            }
+            .table { 
+            font-size: 10pt !important; 
+            width: 100% !important;
+            }
+            }
+        </style>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    </head>
+    <body>
+        <header class="lab-header">
+            <div class="container">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="lab-logo">🔬 Yash Pathlab</div>
+                    <div class="text-end">
+                        <small>
+                        Chodi, Barbaspur, Anuppur (M.P.) 484336<br>
+                        📞 7879619498 • ukumar.kewat5@gmail.com
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <main class="container my-2">
+            <div class="row g-5">
+                <div class="col-lg-7">
+                    <div class="card p-4" id="patientDetailsPanel">
+                        <h5 class="card-title mb-4">Patient Details & Test Selection</h5>
+                        <div id="alertPlaceholder" class="mb-3"></div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="p_name" class="form-label">Patient Name</label>
+                                <input type="text" id="p_name" class="form-control" placeholder="Enter name" required />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="p_id" class="form-label">Patient ID / Reg. No.</label>
+                                <input type="text" id="p_id" class="form-control" placeholder="ID / MRN" />
+                            </div>
+                        </div>
+                        <div class="row g-3 mt-2">
+                            <div class="col-md-6">
+                                <label for="p_age" class="form-label">Age (Years)</label>
+                                <input type="number" id="p_age" class="form-control" min="0" placeholder="e.g., 35" required />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="p_gender" class="form-label">Gender</label>
+                                <select id="p_gender" class="form-select">
+                                    <option value="">-- Select Gender --</option>
+                                    <option value="M">Male</option>
+                                    <option value="F">Female</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row g-3 mt-2">
+                            <div class="col-md-6">
+                                <label for="p_date" class="form-label">Sample Collection Date</label>
+                                <input type="date" id="p_date" class="form-control" />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="p_test" class="form-label">Select Test(s)</label>
+                                <select id="p_test" class="form-select" multiple required>
+                                    <option value="CBC">CBC — Complete Blood Count</option>
+                                    <option value="LFT">LFT — Liver Function Test</option>
+                                    <option value="KFT">KFT — Kidney/Renal Function Test</option>
+                                    <option value="LIPID">Lipid Profile</option>
+                                    <option value="TFT">Thyroid Function (TFT)</option>
+                                    <option value="GLU">Glucose Panel</option>
+                                    <option value="ELEC">Electrolytes</option>
+                                    <option value="URINE">Urine R/E</option>
+                                    <option value="IRON">Iron Studies</option>
+                                    <option value="INFL">Inflammatory Markers (CRP/ESR)</option>
+                                    <option value="MAL">Malaria Test</option>
+                                    <option value="TYPH">Typhoid (Widal)</option>
+                                    <option value="HBSAG">HBsAg</option>
+                                    <option value="VITB12">Vitamin B12</option>
+                                </select>
+                                <small class="text-muted">Hold Ctrl/Cmd to select multiple.</small>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <label for="p_ref" class="form-label">Referring Doctor / Clinic (Optional)</label>
+                            <input type="text" id="p_ref" class="form-control" placeholder="Doctor's Name, Clinic" />
+                        </div>
+                        <div class="d-flex gap-2 mt-4">
+                            <button id="saveProceed" class="btn btn-primary">Proceed to Form &rarr;</button>
+                        </div>
+                    </div>
+                    <div class="card p-4 mt-4 d-none" id="panelForm">
+                        <h5 class="card-title" id="formHeading">Enter Values</h5>
+                        <div id="paramsArea"></div>
+                        <div class="d-flex gap-2 mt-4">
+                            <button id="downloadPdf" class="btn btn-primary">⬇ Download PDF</button>
+                            <button id="printReport" class="btn btn-success">🖨 Print Report</button>
+                            <button id="backToHome" class="btn btn-secondary">← Back</button>
+                            <button id="clearValues" class="btn btn-outline-secondary">Clear Values</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="report-preview">
+                        <div class="report-card" id="previewContent">
+                            <p class="text-muted text-center">Your report preview will appear here.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer>
+            <div class="container text-center">
+                <div id="footnote">
+                    <p>© 2025 Yash Pathlab. All rights reserved.</p>
+                    <p class="mt-2">Developed by: Aniket Ram Kewat | 📞 +91 6266562082 | ✉️ aniket07r+pathlab@gmail.com</p>
+                </div>
+            </div>
+        </footer>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // Data and Logic
+            const TESTS = {
+                "CBC": {
+                    title: "Complete Blood Count",
+                    params: [
+                        { key: "Hemoglobin", unit: "g/dL", low: 13.5, high: 17.5, refMale: [13.5, 17.5], refFemale: [12.0, 15.5] },
+                        { key: "RBC", unit: "million/µL", low: 4.5, high: 5.9, refMale: [4.5, 5.9], refFemale: [4.1, 5.1] },
+                        { key: "WBC", unit: "thousand/µL", low: 4.0, high: 11.0 },
+                        { key: "Platelets", unit: "thousand/µL", low: 150, high: 450 },
+                        { key: "PCV (HCT)", unit: "%", low: 40, high: 54, refMale: [40, 54], refFemale: [36, 48] },
+                        { key: "MCV", unit: "fL", low: 80, high: 100 },
+                        { key: "MCH", unit: "pg", low: 27, high: 33 },
+                        { key: "MCHC", unit: "g/dL", low: 32, high: 36 },
+                        { key: "RDW-CV", unit: "%", low: 11.5, high: 14.5 },
+                        { key: "Neutrophils", unit: "%", low: 40, high: 75 },
+                        { key: "Lymphocytes", unit: "%", low: 20, high: 45 },
+                        { key: "Eosinophils", unit: "%", low: 1, high: 6 },
+                        { key: "Monocytes", unit: "%", low: 2, high: 10 },
+                        { key: "Basophils", unit: "%", low: 0, high: 2 }
+                    ]
+                },
+                "LFT": {
+                    title: "Liver Function Test",
+                    params: [
+                        { key: "Total Bilirubin", unit: "mg/dL", low: 0.1, high: 1.2 },
+                        { key: "Direct Bilirubin", unit: "mg/dL", low: 0, high: 0.3 },
+                        { key: "Indirect Bilirubin", unit: "mg/dL", ro: true },
+                        { key: "SGOT (AST)", unit: "U/L", low: 8, high: 48 },
+                        { key: "SGPT (ALT)", unit: "U/L", low: 7, high: 55 },
+                        { key: "Alkaline Phosphatase (ALP)", unit: "U/L", low: 44, high: 147 },
+                        { key: "Total Protein", unit: "g/dL", low: 6.0, high: 8.3 },
+                        { key: "Albumin", unit: "g/dL", low: 3.5, high: 5.0 },
+                        { key: "Globulin", unit: "g/dL", ro: true },
+                        { key: "A/G Ratio", unit: "", ro: true }
+                    ]
+                },
+                "KFT": {
+                    title: "Kidney Function Test",
+                    params: [
+                        { key: "Urea", unit: "mg/dL", low: 17, high: 43 },
+                        { key: "Creatinine", unit: "mg/dL", low: 0.6, high: 1.3, refMale: [0.6, 1.3], refFemale: [0.5, 1.1] },
+                        { key: "Uric Acid", unit: "mg/dL", low: 3.4, high: 7.0, refMale: [3.4, 7.0], refFemale: [2.4, 6.0] },
+                        { key: "BUN", unit: "mg/dL", low: 6, high: 24 },
+                        { key: "BUN/Creatinine Ratio", unit: "", ro: true },
+                        { key: "Na (Sodium)", unit: "mmol/L", low: 135, high: 145 },
+                        { key: "K (Potassium)", unit: "mmol/L", low: 3.5, high: 5.1 },
+                        { key: "Cl (Chloride)", unit: "mmol/L", low: 98, high: 107 }
+                    ]
+                },
+                "LIPID": {
+                    title: "Lipid Profile",
+                    params: [
+                        { key: "Total Cholesterol", unit: "mg/dL", low: 0, high: 200 },
+                        { key: "HDL Cholesterol", unit: "mg/dL", low: 40, high: 60, refMale: [40, 60], refFemale: [50, 60] },
+                        { key: "LDL Cholesterol", unit: "mg/dL", low: 0, high: 100 },
+                        { key: "Triglycerides", unit: "mg/dL", low: 0, high: 150 },
+                        { key: "VLDL Cholesterol", unit: "mg/dL", ro: true },
+                        { key: "Non-HDL Cholesterol", unit: "mg/dL", ro: true }
+                    ]
+                },
+                "TFT": {
+                    title: "Thyroid Function Test",
+                    params: [
+                        { key: "T3 (Total)", unit: "ng/dL", low: 80, high: 200 },
+                        { key: "T4 (Total)", unit: "µg/dL", low: 4.5, high: 12.0 },
+                        { key: "TSH", unit: "µIU/mL", low: 0.4, high: 4.2 }
+                    ]
+                },
+                "GLU": {
+                    title: "Glucose Panel",
+                    params: [
+                        { key: "Glucose (Fasting)", unit: "mg/dL", low: 70, high: 100 },
+                        { key: "Glucose (PP)", unit: "mg/dL", low: 70, high: 140 },
+                        { key: "Random Glucose", unit: "mg/dL", low: 70, high: 140 },
+                        { key: "HbA1c", unit: "%", low: 4.0, high: 5.6 }
+                    ]
+                },
+                "ELEC": {
+                    title: "Electrolytes",
+                    params: [
+                        { key: "Sodium (Na+)", unit: "mmol/L", low: 135, high: 145 },
+                        { key: "Potassium (K+)", unit: "mmol/L", low: 3.5, high: 5.1 },
+                        { key: "Chloride (Cl-)", unit: "mmol/L", low: 98, high: 107 },
+                        { key: "Calcium (Ca++)", unit: "mg/dL", low: 8.5, high: 10.2 }
+                    ]
+                },
+                "URINE": {
+                    title: "Urine R/E",
+                    params: [
+                        { key: "Color", unit: "", type: "select", options: ["Light Yellow", "Dark Yellow", "Amber", "Red", "Brown", "Colorless"], normalText: "Light Yellow" },
+                        { key: "Appearance", unit: "", type: "select", options: ["Clear", "Slightly Cloudy", "Cloudy", "Turbid"], normalText: "Clear" },
+                        { key: "pH", unit: "", low: 4.5, high: 8.0, normalText: "6.0" },
+                        { key: "Specific Gravity", unit: "", low: 1.003, high: 1.030, normalText: "1.010" },
+                        { key: "Glucose", unit: "", type: "select", options: ["Negative", "Trace", "+1", "+2", "+3", "+4"], normalText: "Negative" },
+                        { key: "Proteins", unit: "", type: "select", options: ["Negative", "Trace", "+1", "+2", "+3", "+4"], normalText: "Negative" },
+                        { key: "Ketones", unit: "", type: "select", options: ["Negative", "Trace", "+1", "+2", "+3", "+4"], normalText: "Negative" },
+                        { key: "Blood", unit: "", type: "select", options: ["Negative", "Trace", "+1", "+2", "+3", "+4"], normalText: "Negative" },
+                        { key: "Microscopic Exam", unit: "", type: "textarea", normalText: "Epithelial cells: 2-3 / HPF" }
+                    ]
+                },
+                "IRON": {
+                    title: "Iron Studies",
+                    params: [
+                        { key: "Serum Iron", unit: "µg/dL", low: 50, high: 150 },
+                        { key: "Total Iron Binding Capacity", unit: "µg/dL", low: 250, high: 450 },
+                        { key: "Ferritin", unit: "ng/mL", low: 20, high: 300, refMale: [20, 300], refFemale: [20, 150] }
+                    ]
+                },
+                "INFL": {
+                    title: "Inflammatory Markers",
+                    params: [
+                        { key: "C-Reactive Protein (CRP)", unit: "mg/L", high: 5.0, low: 0, normalText: "Normal" },
+                        { key: "ESR (Westergren)", unit: "mm/hr", high: 20, low: 0, refMale: [0, 15], refFemale: [0, 20], normalText: "Normal" }
+                    ]
+                },
+                "MAL": {
+                    title: "Malaria Test",
+                    params: [
+                        { key: "MP Antigen (PF/PV)", unit: "", type: "select", options: ["Negative", "Positive"], normalText: "Negative" },
+                        { key: "Peripheral Smear", unit: "", type: "textarea", normalText: "No malarial parasite seen." }
+                    ]
+                },
+                "TYPH": {
+                    title: "Typhoid (Widal)",
+                    params: [
+                        { key: "Typhoid 'O' (S. typhi)", unit: "Titre", low: 0, high: 160 },
+                        { key: "Typhoid 'H' (S. typhi)", unit: "Titre", low: 0, high: 160 }
+                    ]
+                },
+                "HBSAG": {
+                    title: "HBsAg Test",
+                    params: [
+                        { key: "HBsAg", unit: "", type: "select", options: ["Non-Reactive", "Reactive"], normalText: "Non-Reactive" }
+                    ]
+             on gA(gender, minAge=0){ return (g,a)=> g===gender && a>=minAge }
     function ageBand(min,max){ return (g,a)=> a>=min && a<max }
 
     // Param schema:
