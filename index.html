@@ -381,12 +381,38 @@
                 ]
             },
             "TYPH": {
-                title: "Typhoid (Widal)",
-                params: [
-                    { key: "Typhoid 'O' (S. typhi)", unit: "Titre", low: 0, high: 160 },
-                    { key: "Typhoid 'H' (S. typhi)", unit: "Titre", low: 0, high: 160 }
-                ]
-            },
+    title: "Typhoid (Widal Test)",
+    params: [
+        { 
+            key: "S. Typhi O Antigen (TO)", 
+            unit: "Titre", 
+            low: 0, 
+            high: 80, 
+            note: "≥1:160 indicates active infection" 
+        },
+        { 
+            key: "S. Typhi H Antigen (TH)", 
+            unit: "Titre", 
+            low: 0, 
+            high: 80, 
+            note: "≥1:160 indicates active infection" 
+        },
+        { 
+            key: "S. Paratyphi A Antigen (AH)", 
+            unit: "Titre", 
+            low: 0, 
+            high: 40, 
+            note: "≥1:80 indicates infection" 
+        },
+        { 
+            key: "S. Paratyphi B Antigen (BH)", 
+            unit: "Titre", 
+            low: 0, 
+            high: 40, 
+            note: "≥1:80 indicates infection" 
+        }
+    ]
+},
             "HBSAG": {
                 title: "HBsAg Test",
                 params: [
