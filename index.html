@@ -1,589 +1,619 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Pathology Lab Report Generator</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-        <style>
-            @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
-            body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #F5F5F5;
-            color: #424242;
-            }
-            .lab-header {
-            background-color: #1A237E;
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pathology Lab Report Generator</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
+            color: #1a1a1a;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: #fff;
+            padding: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        /* Form and Input Section */
+        .form-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        .input-fields-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .input-fields-row .form-group {
+            flex: 1 1 250px;
+        }
+
+        .print-button {
+            display: block;
+            width: 250px;
+            margin: 30px auto;
+            padding: 12px;
+            background-color: #007bff;
             color: white;
-            padding: 1.5rem 0;
-            border-bottom: 5px solid #42A5F5;
-            }
-            .lab-logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            }
-            .card {
-            border-radius: 0.75rem;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.1);
             border: none;
-            }
-            .report-preview {
-            position: sticky;
-            top: 1.5rem;
-            height: calc(100vh - 3rem);
-            overflow-y: auto;
-            }
-            .report-card {
-            background-color: #ffffff;
-            border: 1px solid #e0e0e0;
-            padding: 2rem;
-            border-radius: 0.75rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            }
-            .value-low {
-            color: #42A5F5;
-            font-weight: 600;
-            }
-            .value-high {
-            color: #EF5350;
-            font-weight: 600;
-            }
-            .table th {
-            background-color: #E0E0E0;
-            color: #212121;
-            }
-            .table thead {
-            border-bottom: 2px solid #bdbdbd;
-            }
-            .form-control, .form-select {
-            border-radius: 0.5rem;
-            border: 1px solid #E0E0E0;
-            transition: all 0.2s;
-            }
-            .form-control:focus, .form-select:focus {
-            box-shadow: 0 0 0 0.25rem rgba(66, 165, 245, 0.25);
-            border-color: #42A5F5;
-            }
-            .btn-primary {
-            background-color: #1A237E;
-            border-color: #1A237E;
-            font-weight: 600;
-            transition: background-color 0.2s, transform 0.2s;
-            }
-            .btn-primary:hover {
-            background-color: #283593;
-            transform: translateY(-2px);
-            }
-            .btn-secondary {
-            background-color: #757575;
-            border-color: #757575;
-            font-weight: 600;
-            }
-            .btn-secondary:hover {
-            background-color: #616161;
-            }
-            .btn-outline-secondary {
-            border-color: #9E9E9E;
-            color: #616161;
-            }
-            .btn-outline-secondary:hover {
-            background-color: #e0e0e0;
-            color: #424242;
-            }
-            footer {
-            margin-top: 3rem;
-            padding: 2rem 0;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
             text-align: center;
-            font-size: 0.8rem;
-            color: #6c757d;
-            border-top: 1px solid #e0e0e0;
-            }
-            @media (max-width: 991.98px) {
-            .report-preview {
-            position: static;
-            height: auto;
-            margin-top: 1.5rem;
-            }
-            }
-            @media print {
-            body { background: white !important; }
-            #footnote{ display: none !important; }
-            .lab-header { 
-            position: static !important; 
-            background: #1A237E !important; 
-            color: white !important; 
-            border-bottom: 5px solid #42A5F5 !important;
-            }
-            main .row > .col-lg-7 { display: none !important; }
-            main .row > .col-lg-5 { 
-            flex: 0 0 100% !important; 
-            max-width: 100% !important; 
-            width: 100% !important;
-            }
-            .report-preview { 
-            position: static !important; 
-            height: auto !important; 
-            top: auto !important;
-            }
-            #previewContent { 
-            box-shadow: none !important; 
-            border: none !important; 
-            padding: 1rem !important;
-            background: white !important;
-            }
-            footer { 
-            position: static !important; 
-            border-top: 1px solid #e0e0e0 !important; 
-            color: #6c757d !important;
-            page-break-inside: avoid;
-            }
-            .table { 
-            font-size: 10pt !important; 
-            width: 100% !important;
-            }
-            }
-        </style>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
-    </head>
-    <body>
-        <header class="lab-header">
-            <div class="container">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="lab-logo">🔬 Yash Pathlab</div>
-                    <div class="text-end">
-                        <small>
-                        Chodi, Barbaspur, Anuppur (M.P.) 484336<br>
-                        📞 7879619498 • ukumar.kewat5@gmail.com
-                        </small>
-                    </div>
-                </div>
-            </div>
-        </header>
-        <main class="container my-2">
-            <div class="row g-5">
-                <div class="col-lg-7">
-                    <div class="card p-4" id="patientDetailsPanel">
-                        <h5 class="card-title mb-4">Patient Details & Test Selection</h5>
-                        <div id="alertPlaceholder" class="mb-3"></div>
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label for="p_name" class="form-label">Patient Name</label>
-                                <input type="text" id="p_name" class="form-control" placeholder="Enter name" required />
-                            </div>
-                            <div class="col-md-6">
-                                <label for="p_id" class="form-label">Patient ID / Reg. No.</label>
-                                <input type="text" id="p_id" class="form-control" placeholder="ID / MRN" />
-                            </div>
-                        </div>
-                        <div class="row g-3 mt-2">
-                            <div class="col-md-6">
-                                <label for="p_age" class="form-label">Age (Years)</label>
-                                <input type="number" id="p_age" class="form-control" min="0" placeholder="e.g., 35" required />
-                            </div>
-                            <div class="col-md-6">
-                                <label for="p_gender" class="form-label">Gender</label>
-                                <select id="p_gender" class="form-select">
-                                    <option value="">-- Select Gender --</option>
-                                    <option value="M">Male</option>
-                                    <option value="F">Female</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row g-3 mt-2">
-                            <div class="col-md-6">
-                                <label for="p_date" class="form-label">Sample Collection Date</label>
-                                <input type="date" id="p_date" class="form-control" />
-                            </div>
-                            <div class="col-md-6">
-                                <label for="p_test" class="form-label">Select Test(s)</label>
-                                <select id="p_test" class="form-select" multiple required>
-                                    <option value="CBC">CBC — Complete Blood Count</option>
-                                    <option value="LFT">LFT — Liver Function Test</option>
-                                    <option value="KFT">KFT — Kidney/Renal Function Test</option>
-                                    <option value="LIPID">Lipid Profile</option>
-                                    <option value="TFT">Thyroid Function (TFT)</option>
-                                    <option value="GLU">Glucose Panel</option>
-                                    <option value="ELEC">Electrolytes</option>
-                                    <option value="URINE">Urine R/E</option>
-                                    <option value="IRON">Iron Studies</option>
-                                    <option value="INFL">Inflammatory Markers (CRP/ESR)</option>
-                                    <option value="MAL">Malaria Test</option>
-                                    <option value="TYPH">Typhoid (Widal)</option>
-                                    <option value="HBSAG">HBsAg</option>
-                                    <option value="VITB12">Vitamin B12</option>
-                                </select>
-                                <small class="text-muted">Hold Ctrl/Cmd to select multiple.</small>
-                            </div>
-                        </div>
-                        <div class="mt-3">
-                            <label for="p_ref" class="form-label">Referring Doctor / Clinic (Optional)</label>
-                            <input type="text" id="p_ref" class="form-control" placeholder="Doctor's Name, Clinic" />
-                        </div>
-                        <div class="d-flex gap-2 mt-4">
-                            <button id="saveProceed" class="btn btn-primary">Proceed to Form &rarr;</button>
-                        </div>
-                    </div>
-                    <div class="card p-4 mt-4 d-none" id="panelForm">
-                        <h5 class="card-title" id="formHeading">Enter Values</h5>
-                        <div id="paramsArea"></div>
-                        <div class="d-flex gap-2 mt-4">
-                            <button id="downloadPdf" class="btn btn-primary">⬇ Download PDF</button>
-                            <button id="printReport" class="btn btn-success">🖨 Print Report</button>
-                            <button id="backToHome" class="btn btn-secondary">← Back</button>
-                            <button id="clearValues" class="btn btn-outline-secondary">Clear Values</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-5">
-                    <div class="report-preview">
-                        <div class="report-card" id="previewContent">
-                            <p class="text-muted text-center">Your report preview will appear here.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-        <footer>
-            <div class="container text-center">
-                <div id="footnote">
-                    <p>© 2025 Yash Pathlab. All rights reserved.</p>
-                    <p class="mt-2">Developed by: Aniket Ram Kewat | 📞 +91 6266562082 | ✉️ aniket07r+pathlab@gmail.com</p>
-                </div>
-            </div>
-        </footer>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-        
-                                                    function round(n){ return (n||n===0)? Math.round(n*100)/100 : '' }
-          <script>
-    	
-    	     // Data and Logic
-        const TESTS = {
-            "CBC": {
-                title: "Complete Blood Count",
-                params: [
-                    { key: "Hemoglobin", unit: "g/dL", low: 13.5, high: 17.5, refMale: [13.5, 17.5], refFemale: [12.0, 15.5] },
-                    { key: "RBC", unit: "million/µL", low: 4.5, high: 5.9, refMale: [4.5, 5.9], refFemale: [4.1, 5.1] },
-                    { key: "WBC", unit: "thousand/µL", low: 4.0, high: 11.0 },
-                    { key: "Platelets", unit: "thousand/µL", low: 150, high: 450 },
-                    { key: "PCV (HCT)", unit: "%", low: 40, high: 54, refMale: [40, 54], refFemale: [36, 48] },
-                    { key: "MCV", unit: "fL", low: 80, high: 100 },
-                    { key: "MCH", unit: "pg", low: 27, high: 33 },
-                    { key: "MCHC", unit: "g/dL", low: 32, high: 36 },
-                    { key: "RDW-CV", unit: "%", low: 11.5, high: 14.5 },
-                    { key: "Neutrophils", unit: "%", low: 40, high: 75 },
-                    { key: "Lymphocytes", unit: "%", low: 20, high: 45 },
-                    { key: "Eosinophils", unit: "%", low: 1, high: 6 },
-                    { key: "Monocytes", unit: "%", low: 2, high: 10 },
-                    { key: "Basophils", unit: "%", low: 0, high: 2 }
-                ]
-            },
-            "LFT": {
-                title: "Liver Function Test",
-                params: [
-                    { key: "Total Bilirubin", unit: "mg/dL", low: 0.1, high: 1.2 },
-                    { key: "Direct Bilirubin", unit: "mg/dL", low: 0, high: 0.3 },
-                    { key: "Indirect Bilirubin", unit: "mg/dL", ro: true },
-                    { key: "SGOT (AST)", unit: "U/L", low: 8, high: 48 },
-                    { key: "SGPT (ALT)", unit: "U/L", low: 7, high: 55 },
-                    { key: "Alkaline Phosphatase (ALP)", unit: "U/L", low: 44, high: 147 },
-                    { key: "Total Protein", unit: "g/dL", low: 6.0, high: 8.3 },
-                    { key: "Albumin", unit: "g/dL", low: 3.5, high: 5.0 },
-                    { key: "Globulin", unit: "g/dL", ro: true },
-                    { key: "A/G Ratio", unit: "", ro: true }
-                ]
-            },
-            "KFT": {
-                title: "Kidney Function Test",
-                params: [
-                    { key: "Urea", unit: "mg/dL", low: 17, high: 43 },
-                    { key: "Creatinine", unit: "mg/dL", low: 0.6, high: 1.3, refMale: [0.6, 1.3], refFemale: [0.5, 1.1] },
-                    { key: "Uric Acid", unit: "mg/dL", low: 3.4, high: 7.0, refMale: [3.4, 7.0], refFemale: [2.4, 6.0] },
-                    { key: "BUN", unit: "mg/dL", low: 6, high: 24 },
-                    { key: "BUN/Creatinine Ratio", unit: "", ro: true },
-                    { key: "Na (Sodium)", unit: "mmol/L", low: 135, high: 145 },
-                    { key: "K (Potassium)", unit: "mmol/L", low: 3.5, high: 5.1 },
-                    { key: "Cl (Chloride)", unit: "mmol/L", low: 98, high: 107 }
-                ]
-            },
-            "LIPID": {
-                title: "Lipid Profile",
-                params: [
-                    { key: "Total Cholesterol", unit: "mg/dL", low: 0, high: 200 },
-                    { key: "HDL Cholesterol", unit: "mg/dL", low: 40, high: 60, refMale: [40, 60], refFemale: [50, 60] },
-                    { key: "LDL Cholesterol", unit: "mg/dL", low: 0, high: 100 },
-                    { key: "Triglycerides", unit: "mg/dL", low: 0, high: 150 },
-                    { key: "VLDL Cholesterol", unit: "mg/dL", ro: true },
-                    { key: "Non-HDL Cholesterol", unit: "mg/dL", ro: true }
-                ]
-            },
-            "TFT": {
-                title: "Thyroid Function Test",
-                params: [
-                    { key: "T3 (Total)", unit: "ng/dL", low: 80, high: 200 },
-                    { key: "T4 (Total)", unit: "µg/dL", low: 4.5, high: 12.0 },
-                    { key: "TSH", unit: "µIU/mL", low: 0.4, high: 4.2 }
-                ]
-            },
-            "GLU": {
-                title: "Glucose Panel",
-                params: [
-                    { key: "Glucose (Fasting)", unit: "mg/dL", low: 70, high: 100 },
-                    { key: "Glucose (PP)", unit: "mg/dL", low: 70, high: 140 },
-                    { key: "Random Glucose", unit: "mg/dL", low: 70, high: 140 },
-                    { key: "HbA1c", unit: "%", low: 4.0, high: 5.6 }
-                ]
-            },
-            "ELEC": {
-                title: "Electrolytes",
-                params: [
-                    { key: "Sodium (Na+)", unit: "mmol/L", low: 135, high: 145 },
-                    { key: "Potassium (K+)", unit: "mmol/L", low: 3.5, high: 5.1 },
-                    { key: "Chloride (Cl-)", unit: "mmol/L", low: 98, high: 107 },
-                    { key: "Calcium (Ca++)", unit: "mg/dL", low: 8.5, high: 10.2 }
-                ]
-            },
-            "URINE": {
-                title: "Urine R/E",
-                params: [
-                    { key: "Color", unit: "", type: "select", options: ["Light Yellow", "Dark Yellow", "Amber", "Red", "Brown", "Colorless"], normalText: "Light Yellow" },
-                    { key: "Appearance", unit: "", type: "select", options: ["Clear", "Slightly Cloudy", "Cloudy", "Turbid"], normalText: "Clear" },
-                    { key: "pH", unit: "", low: 4.5, high: 8.0, normalText: "6.0" },
-                    { key: "Specific Gravity", unit: "", low: 1.003, high: 1.030, normalText: "1.010" },
-                    { key: "Glucose", unit: "", type: "select", options: ["Negative", "Trace", "+1", "+2", "+3", "+4"], normalText: "Negative" },
-                    { key: "Proteins", unit: "", type: "select", options: ["Negative", "Trace", "+1", "+2", "+3", "+4"], normalText: "Negative" },
-                    { key: "Ketones", unit: "", type: "select", options: ["Negative", "Trace", "+1", "+2", "+3", "+4"], normalText: "Negative" },
-                    { key: "Blood", unit: "", type: "select", options: ["Negative", "Trace", "+1", "+2", "+3", "+4"], normalText: "Negative" },
-                    { key: "Microscopic Exam", unit: "", type: "textarea", normalText: "Epithelial cells: 2-3 / HPF" }
-                ]
-            },
-            "IRON": {
-                title: "Iron Studies",
-                params: [
-                    { key: "Serum Iron", unit: "µg/dL", low: 50, high: 150 },
-                    { key: "Total Iron Binding Capacity", unit: "µg/dL", low: 250, high: 450 },
-                    { key: "Ferritin", unit: "ng/mL", low: 20, high: 300, refMale: [20, 300], refFemale: [20, 150] }
-                ]
-            },
-            "INFL": {
-                title: "Inflammatory Markers",
-                params: [
-                    { key: "C-Reactive Protein (CRP)", unit: "mg/L", high: 5.0, low: 0, normalText: "Normal" },
-                    { key: "ESR (Westergren)", unit: "mm/hr", high: 20, low: 0, refMale: [0, 15], refFemale: [0, 20], normalText: "Normal" }
-                ]
-            },
-            "MAL": {
-                title: "Malaria Test",
-                params: [
-                    { key: "MP Antigen (PF/PV)", unit: "", type: "select", options: ["Negative", "Positive"], normalText: "Negative" },
-                    { key: "Peripheral Smear", unit: "", type: "textarea", normalText: "No malarial parasite seen." }
-                ]
-            },
-            "TYPH": {
-    title: "Typhoid (Widal Test)",
-    params: [
-        { 
-            key: "S. Typhi O Antigen (TO)", 
-            unit: "Titre", 
-            low: 0, 
-            high: 80, 
-            note: "≥1:160 indicates active infection" 
-        },
-        { 
-            key: "S. Typhi H Antigen (TH)", 
-            unit: "Titre", 
-            low: 0, 
-            high: 80, 
-            note: "≥1:160 indicates active infection" 
-        },
-        { 
-            key: "S. Paratyphi A Antigen (AH)", 
-            unit: "Titre", 
-            low: 0, 
-            high: 40, 
-            note: "≥1:80 indicates infection" 
-        },
-        { 
-            key: "S. Paratyphi B Antigen (BH)", 
-            unit: "Titre", 
-            low: 0, 
-            high: 40, 
-            note: "≥1:80 indicates infection" 
+            transition: background-color 0.3s ease;
         }
-    ]
-},
-            "HBSAG": {
-                title: "HBsAg Test",
-                params: [
-                    { key: "HBsAg", unit: "", type: "select", options: ["Non-Reactive", "Reactive"], normalText: "Non-Reactive" }
-                ]
-            },
-            "VITB12": {
-                title: "Vitamin B12",
-                params: [
-                    { key: "Vitamin B12", unit: "pg/mL", low: 200, high: 900 }
-                ]
+
+        .print-button:hover {
+            background-color: #0056b3;
+        }
+
+        .live-preview {
+            border-top: 1px dashed #ccc;
+            padding-top: 20px;
+            margin-top: 20px;
+        }
+
+        /* Report Section */
+        .report-content {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        .lab-header {
+            text-align: center;
+            line-height: 1.2;
+            border-bottom: 2px solid #333;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .lab-header h1 {
+            margin: 0;
+            font-size: 28px;
+            color: #004d99;
+        }
+
+        .lab-header p {
+            margin: 2px 0 0;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .patient-info-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .patient-info-table td {
+            padding: 5px;
+            border-bottom: 1px dashed #ccc;
+        }
+
+        .patient-info-table td:first-child {
+            width: 150px;
+            font-weight: bold;
+        }
+
+        .test-report-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .test-report-table th,
+        .test-report-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        .test-report-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .abnormal-result {
+            color: red;
+            font-weight: bold;
+        }
+
+        .report-footer {
+            margin-top: 30px;
+            padding-top: 10px;
+            border-top: 1px solid #333;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .report-footer p {
+            margin: 5px 0;
+        }
+
+        .report-remarks {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .report-remarks h4 {
+            margin-bottom: 5px;
+        }
+
+        .authorized-signatory {
+            margin-top: 40px;
+            text-align: right;
+        }
+
+        .authorized-signatory .line {
+            width: 150px;
+            height: 1px;
+            background: #000;
+            margin-left: auto;
+            margin-bottom: 5px;
+        }
+
+        .authorized-signatory p {
+            margin: 0;
+            font-size: 12px;
+        }
+
+        /* Print-specific styles */
+        @media print {
+            body {
+                background-color: #fff;
+                font-size: 12pt;
+                -webkit-print-color-adjust: exact;
             }
-        };
-        
-    	
-let state = {
-        patient: {},
-        selectedTests: [],
-        values: {}
-    };
 
-    const el = {
-        p_name: document.getElementById('p_name'),
-        p_id: document.getElementById('p_id'),
-        p_age: document.getElementById('p_age'),
-        p_gender: document.getElementById('p_gender'),
-        p_date: document.getElementById('p_date'),
-        p_test: document.getElementById('p_test'),
-        p_ref: document.getElementById('p_ref'),
-        patientDetailsPanel: document.getElementById('patientDetailsPanel'),
-        panelForm: document.getElementById('panelForm'),
-        previewContent: document.getElementById('previewContent'),
-        formHeading: document.getElementById('formHeading'),
-        paramsArea: document.getElementById('paramsArea'),
-        saveProceed: document.getElementById('saveProceed'),
-        printReport: document.getElementById('printReport'),
-        backToHome: document.getElementById('backToHome'),
-        clearValues: document.getElementById('clearValues'),
-        alertPlaceholder: document.getElementById('alertPlaceholder')
-    };
+            .container {
+                box-shadow: none;
+                padding: 0;
+                border-radius: 0;
+                width: 100%;
+                max-width: 100%;
+                margin: 0;
+            }
 
-    function showAlert(message) {
-        el.alertPlaceholder.innerHTML = `
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            .form-section,
+            .print-button {
+                display: none;
+            }
+
+            .live-preview {
+                display: block !important;
+                border: none;
+                padding: 0;
+                page-break-after: always;
+            }
+
+            .report-content {
+                border: none;
+                padding: 0;
+            }
+
+            .lab-header,
+            .patient-info-table,
+            .test-report-table,
+            .report-footer {
+                padding: 10px 0;
+            }
+
+            .lab-header {
+                border-bottom: 2px solid #000;
+            }
+
+            .lab-header h1 {
+                font-size: 24px;
+            }
+
+            .lab-header p {
+                font-size: 12px;
+            }
+
+            .patient-info-table td {
+                padding: 1%;
+                border-bottom: 1px dashed #000;
+                font-size: 12px;
+            }
+
+            .test-report-table th,
+            .test-report-table td {
+                border-color: #000;
+                font-size: 12px;
+                padding: 8px;
+            }
+
+            .report-footer {
+                border-top: 1px solid #000;
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body ng-app="reportApp" ng-controller="ReportController">
+
+    <div class="container">
+        <div class="form-section">
+            <h2>Pathology Lab Report Generator</h2>
+
+            <h3>Patient Information</h3>
+            <div class="input-fields-row">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" ng-model="patient.name" placeholder="Patient's Name">
+                </div>
+                <div class="form-group">
+                    <label for="age">Age:</label>
+                    <input type="number" id="age" ng-model="patient.age" placeholder="Age" min="0">
+                </div>
+                <div class="form-group">
+                    <label for="gender">Gender:</label>
+                    <select id="gender" ng-model="patient.gender">
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="sampleId">Sample ID:</label>
+                    <input type="text" id="sampleId" ng-model="patient.sampleId" placeholder="Sample ID">
+                </div>
+                <div class="form-group">
+                    <label for="sampleDate">Sample Date:</label>
+                    <input type="date" id="sampleDate" ng-model="patient.sampleDate">
+                </div>
             </div>
-        `;
-    }
 
-    function show(panelId) {
-        el.patientDetailsPanel.classList.toggle('d-none', panelId === 'form');
-        el.panelForm.classList.toggle('d-none', panelId === 'home');
-    }
+            <h3>Select Test & Enter Results</h3>
+            <div class="input-fields-row">
+                <div class="form-group">
+                    <label for="testSelect">Test:</label>
+                    <select id="testSelect" ng-model="selectedTest" ng-change="loadTestParameters()">
+                        <option value="">Select a Test</option>
+                        <option ng-repeat="test in testList" value="{{test.id}}">{{test.name}}</option>
+                    </select>
+                </div>
+            </div>
 
-    function buildForm() {
-        el.paramsArea.innerHTML = '';
-        el.formHeading.textContent = `Enter Values for Selected Tests`;
+            <div class="input-fields-row" ng-show="selectedTest && testParameters.length > 0">
+                <div class="form-group" ng-repeat="param in testParameters">
+                    <label>{{param.name}} ({{param.units}}):</label>
+                    <input type="text" ng-model="param.value" ng-change="flagAbnormal(param)" placeholder="Result">
+                    <small ng-if="param.normalRange">
+                        Normal Range: {{param.normalRange}}
+                    </small>
+                </div>
+            </div>
+            <button class="print-button" ng-click="printReport()">Print / Save as PDF</button>
+        </div>
 
-        state.selectedTests.forEach(testKey => {
-            const test = TESTS[testKey];
-            if (!test) return;
+        <div class="live-preview" ng-show="selectedTest">
+            <div class="report-content">
+                <div class="lab-header">
+                    <h1>🔬YASH PATHLAB</h1>
+                    <p>Chondi, Barbaspur, Anuppur - 484336</p>
+                    <p>Contact: +91 7879619498 | Email: ukumar.kewat5@gmail.com</p>
+                </div>
 
-            state.values[testKey] = state.values[testKey] || {};
-            let formHtml = `<h6 class="mt-4 fw-bold">${test.title}</h6><hr>`;
+                <table class="patient-info-table">
+                    <tr>
+                        <td>Patient Name</td>
+                        <td>: {{patient.name || 'N/A'}}</td>
+                        <td>Report Date</td>
+                        <td>: {{patient.reportDate | date:'dd-MM-yyyy'}}</td>
+                    </tr>
+                    <tr>
+                        <td>Age / Gender</td>
+                        <td>: {{patient.age || 'N/A'}} years / {{patient.gender || 'N/A'}}</td>
+                        <td>Sample ID</td>
+                        <td>: {{patient.sampleId || 'N/A'}}</td>
+                    </tr>
+                    <tr>
+                        <td>Referring Doctor</td>
+                        <td>:_______________</td>
+                        <td>Sample Date</td>
+                        <td>: {{patient.sampleDate | date:'dd-MM-yyyy'}}</td>
+                    </tr>
+                </table>
 
-            formHtml += test.params.map(p => {
-                const val = state.values[testKey][p.key] || '';
-                let inputHtml = `<input type="text" class="form-control" value="${val}" data-key="${p.key}" data-test="${testKey}"/>`;
-                return `
-                    <div class="mb-3">
-                        <label class="form-label mb-1">${p.key} (${p.unit})</label>
-                        ${inputHtml}
-                        <small class="form-text text-muted">Reference: ${p.low ?? ''} - ${p.high ?? ''}</small>
-                    </div>`;
-            }).join('');
+                <h3 style="text-align: center; margin-bottom: 20px; font-weight: bold;">{{getTestName()}} REPORT</h3>
 
-            el.paramsArea.innerHTML += formHtml;
+                <table class="test-report-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 40%;">Parameter</th>
+                            <th style="width: 20%;">Result</th>
+                            <th style="width: 15%;">Unit</th>
+                            <th style="width: 25%;">Biological Reference Range</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="param in testParameters">
+                            <td>{{param.name}}</td>
+                            <td ng-class="{'abnormal-result': param.isAbnormal}">{{param.value}}</td>
+                            <td>{{param.units}}</td>
+                            <td>{{param.normalRange}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="report-remarks">
+                    <h4>Remarks:</h4>
+                    <p>- The results provided are for reference only and are not a substitute for a physician's opinion.
+                    </p>
+                    <p>- Normal ranges may vary slightly based on the laboratory.</p>
+                </div>
+
+                <div class="authorized-signatory">
+                    <div class="line"></div>
+                    <p>Authorized Signatory</p>
+                </div>
+
+                <div class="report-footer">
+                    <p>--- End of Report ---</p>
+                    <p>This is a computer-generated report and does not require a signature.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var app = angular.module('reportApp', []);
+
+        app.controller('ReportController', function ($scope) {
+            $scope.patient = {
+                name: '',
+                age: null,
+                gender: '',
+                address: '',
+                sampleId: '',
+                sampleDate: new Date(),
+                reportDate: new Date()
+            };
+
+            $scope.selectedTest = '';
+            $scope.testParameters = [];
+
+            // JSON Data for Tests and Parameters
+            var testsData = {
+                "cbc": {
+                    "name": "CBC (Complete Blood Count)",
+                    "parameters": {
+                        "Hemoglobin": { "units": "g/dL", "ranges": { "Male": [13, 18], "Female": [12, 16] } },
+                        "RBC Count": { "units": "×10^6/μL", "ranges": { "Male": [4.6, 6.2], "Female": [4.2, 5.4] } },
+                        "Hematocrit / PCV": { "units": "%", "ranges": { "Male": [40, 54], "Female": [36, 48] } },
+                        "MCV (Mean Corpuscular Volume)": { "units": "fL", "ranges": { "Adults": [80, 100] } },
+                        "MCH (Mean Corpuscular Hemoglobin)": { "units": "pg", "ranges": { "Adults": [27, 33] } },
+                        "MCHC (Mean Corpuscular Hemoglobin Concentration)": { "units": "g/dL", "ranges": { "Adults": [32, 36] } },
+                        "RDW (Red Cell Distribution Width)": { "units": "%", "ranges": { "Adults": [11.5, 14.5] } },
+                        "Total Leucocyte Count (TLC/WBC)": { "units": "×10^3/μL", "ranges": { "Adults": [4.5, 11] } },
+                        "Neutrophils": { "units": "%", "ranges": { "Adults": [40, 70] } },
+                        "Lymphocytes": { "units": "%", "ranges": { "Adults": [20, 40] } },
+                        "Monocytes": { "units": "%", "ranges": { "Adults": [2, 8] } },
+                        "Eosinophils": { "units": "%", "ranges": { "Adults": [1, 6] } },
+                        "Basophils": { "units": "%", "ranges": { "Adults": [0, 2] } },
+                        "Platelet Count": { "units": "×10^3/μL", "ranges": { "Adults": [150, 400] } },
+                        "MPV (Mean Platelet Volume)": { "units": "fL", "ranges": { "Adults": [7.5, 11.5] } },
+                        "PDW (Platelet Distribution Width)": { "units": "%", "ranges": { "Adults": [9, 14] } },
+                        "Immature Granulocyte (IG)": { "units": "%", "ranges": { "Adults": [0, 0.4] } },
+                        "Nucleated RBC (NRBC)": { "units": "per 100 WBC", "ranges": { "Adults": [0, 0] } }
+                    }
+                },
+                "kft": {
+                    "name": "KFT (Kidney Function Test)",
+                    "parameters": {
+                        "Serum Creatinine": { "units": "mg/dL", "ranges": { "Male": [0.7, 1.3], "Female": [0.6, 1.1] } },
+                        "Blood Urea Nitrogen (BUN)": { "units": "mg/dL", "ranges": { "Adults": [7, 20] } },
+                        "Serum Uric Acid": { "units": "mg/dL", "ranges": { "Male": [3.5, 7.2], "Female": [2.6, 6.0] } },
+                        "Sodium (Na+)": { "units": "mEq/L", "ranges": { "Adults": [135, 145] } },
+                        "Potassium (K+)": { "units": "mEq/L", "ranges": { "Adults": [3.5, 5.0] } },
+                        "Chloride (Cl-)": { "units": "mEq/L", "ranges": { "Adults": [98, 107] } },
+                        "Bicarbonate (HCO3-)": { "units": "mEq/L", "ranges": { "Adults": [22, 28] } },
+                        "eGFR (Estimated Glomerular Filtration Rate)": { "units": "mL/min/1.73m²", "ranges": { "Adults": [90, 120] }, "is_gfr": true }
+                    }
+                },
+                "lft": {
+                    "name": "LFT (Liver Function Test)",
+                    "parameters": {
+                        "Total Bilirubin": { "units": "mg/dL", "ranges": { "Adults": [0.1, 1.2] } },
+                        "SGOT (AST)": { "units": "U/L", "ranges": { "Adults": [8, 40] } },
+                        "SGPT (ALT)": { "units": "U/L", "ranges": { "Adults": [7, 56] } },
+                        "Alkaline Phosphatase": { "units": "U/L", "ranges": { "Adults": [40, 150] } }
+                    }
+                },
+                "lipid_profile": {
+                    "name": "Lipid Profile",
+                    "parameters": {
+                        "Total Cholesterol": { "units": "mg/dL", "ranges": { "Adults": [125, 200] } },
+                        "Triglycerides": { "units": "mg/dL", "ranges": { "Adults": [0, 150] } },
+                        "HDL Cholesterol": { "units": "mg/dL", "ranges": { "Male": [40, 60], "Female": [50, 60] } },
+                        "LDL Cholesterol": { "units": "mg/dL", "ranges": { "Adults": [0, 100] } },
+                        "VLDL Cholesterol": { "units": "mg/dL", "ranges": { "Adults": [5, 40] } },
+                        "Total Cholesterol/HDL Ratio": { "units": "Ratio", "ranges": { "Adults": [0, 4.5] } },
+                        "LDL/HDL Ratio": { "units": "Ratio", "ranges": { "Adults": [0, 3] } }
+                    }
+                },
+                "blood_glucose": {
+                    "name": "Blood Glucose",
+                    "parameters": {
+                        "Fasting Blood Sugar (FBS)": { "units": "mg/dL", "ranges": { "Adults": [70, 100] } },
+                        "Post Prandial Blood Sugar (PPBS)": { "units": "mg/dL", "ranges": { "Adults": [70, 140] } },
+                        "HbA1c": { "units": "%", "ranges": { "Adults": [4, 5.6] } }
+                    }
+                },
+                "thyroid_profile": {
+                    "name": "Thyroid Profile",
+                    "parameters": {
+                        "TSH": { "units": "μIU/mL", "ranges": { "Adults": [0.4, 4.0] } },
+                        "Free T4": { "units": "ng/dL", "ranges": { "Adults": [0.8, 1.8] } },
+                        "Free T3": { "units": "pg/mL", "ranges": { "Adults": [2.3, 4.2] } }
+                    }
+                },
+                "widal": {
+                    "name": "Widal Test",
+                    "parameters": {
+                        "S. typhi O antigen": { "units": "Titre", "normalTiterValue": 80, "normalTiterText": "<1:80", "positiveTiterText": "≥1:160" },
+                        "S. typhi H antigen": { "units": "Titre", "normalTiterValue": 160, "normalTiterText": "<1:160", "positiveTiterText": "≥1:160" },
+                        "S. paratyphi A H antigen": { "units": "Titre", "normalTiterValue": 160, "normalTiterText": "<1:160", "positiveTiterText": "≥1:160" },
+                        "S. paratyphi B H antigen": { "units": "Titre", "normalTiterValue": 160, "normalTiterText": "<1:160", "positiveTiterText": "≥1:160" }
+                    }
+                }
+            };
+
+            $scope.testList = Object.keys(testsData).map(key => ({ id: key, name: testsData[key].name }));
+
+            $scope.loadTestParameters = function () {
+                if (!$scope.selectedTest) {
+                    $scope.testParameters = [];
+                    return;
+                }
+                const test = testsData[$scope.selectedTest];
+                const newParams = [];
+                for (let paramName in test.parameters) {
+                    const param = test.parameters[paramName];
+                    const range = $scope.getNormalRange(paramName, param);
+                    newParams.push({
+                        name: paramName,
+                        units: param.units,
+                        value: '',
+                        isAbnormal: false,
+                        normalRange: range
+                    });
+                }
+                $scope.testParameters = newParams;
+            };
+
+            $scope.getNormalRange = function (paramName, param) {
+                if (param.units === "Titre") {
+                    return param.normalTiterText;
+                }
+                if (param.is_gfr) {
+                    return "≥90";
+                }
+                const gender = $scope.patient.gender;
+                const ranges = param.ranges;
+                const relevantRanges = ranges[gender] || ranges["Adults"] || ranges["Male"] || ranges["Female"];
+                if (Array.isArray(relevantRanges)) {
+                    return `${relevantRanges[0]} - ${relevantRanges[1]}`;
+                }
+                return relevantRanges || 'N/A';
+            };
+
+            $scope.flagAbnormal = function (param) {
+                const enteredValue = param.value;
+                if (!enteredValue) {
+                    param.isAbnormal = false;
+                    return;
+                }
+
+                const testData = testsData[$scope.selectedTest];
+                const paramData = testData.parameters[param.name];
+
+                if (param.units === "Titre") {
+                    const lowerCaseValue = enteredValue.toLowerCase().trim();
+                    if (lowerCaseValue.includes("negative")) {
+                        param.isAbnormal = false;
+                        return;
+                    }
+
+                    const match = enteredValue.match(/^1:(\d+)$/);
+                    if (match) {
+                        const titerValue = parseInt(match[1], 10);
+                        const normalThreshold = paramData.normalTiterValue;
+                        if (titerValue >= normalThreshold) {
+                            param.isAbnormal = true;
+                        } else {
+                            param.isAbnormal = false;
+                        }
+                    } else {
+                        param.isAbnormal = true; // Flag if format is incorrect
+                    }
+                } else if (param.is_gfr) {
+                    const value = parseFloat(enteredValue);
+                    if (isNaN(value) || value <= 90) {
+                        param.isAbnormal = true;
+                    } else {
+                        param.isAbnormal = false;
+                    }
+                } else {
+                    // Logic for numeric values
+                    const relevantRanges = paramData.ranges;
+                    const relevantRange = relevantRanges[$scope.patient.gender] || relevantRanges["Adults"] || relevantRanges["Male"] || relevantRanges["Female"];
+
+                    if (!relevantRange || !Array.isArray(relevantRange)) {
+                        param.isAbnormal = false;
+                        return;
+                    }
+
+                    const lower = relevantRange[0];
+                    const upper = relevantRange[1];
+                    const value = parseFloat(enteredValue);
+
+                    if (isNaN(value)) {
+                        param.isAbnormal = false;
+                        return;
+                    }
+
+                    if (value < lower || value > upper) {
+                        param.isAbnormal = true;
+                    } else {
+                        param.isAbnormal = false;
+                    }
+                }
+            };
+
+            $scope.getTestName = function () {
+                const test = testsData[$scope.selectedTest];
+                return test ? test.name : '';
+            };
+
+            $scope.printReport = function () {
+                window.print();
+            };
         });
-    }
-
-    function refreshPreview() {
-        const patient = state.patient;
-        if (state.selectedTests.length === 0 || !patient.name) {
-            el.previewContent.innerHTML = `<p class="text-muted text-center">Your report preview will appear here.</p>`;
-            return;
-        }
-
-        let reportHtml = `
-        <div class="border rounded p-3 small">
-            <div class="row row-cols-2 g-2">
-                <div><b>Patient Name:</b> ${patient.name || '-'}</div>
-                <div><b>ID:</b> ${patient.id || '-'}</div>
-                <div><b>Age/Gender:</b> ${patient.age || '-'} / ${patient.gender || '-'}</div>
-                <div><b>Date:</b> ${patient.date || '-'}</div>
-                <div><b>Ref. Doctor:</b> ${patient.ref || '-'}</div>
-            </div>
-        </div>`;
-
-        state.selectedTests.forEach(testKey => {
-            const test = TESTS[testKey];
-            const values = state.values[testKey] || {};
-            reportHtml += `
-                <h6 class="mt-4 fw-bold">${test.title}</h6>
-                <table class="table table-sm mt-2">
-                    <thead><tr><th>Parameter</th><th>Value</th><th>Unit</th></tr></thead><tbody>
-            `;
-            test.params.forEach(p => {
-                const value = values[p.key] || '-';
-                reportHtml += `<tr><td>${p.key}</td><td>${value}</td><td>${p.unit || '-'}</td></tr>`;
-            });
-            reportHtml += `</tbody></table>`;
-        });
-
-        el.previewContent.innerHTML = reportHtml;
-    }
-
-    // --- Event Listeners ---
-    el.saveProceed.addEventListener('click', () => {
-        state.patient = {
-            name: el.p_name.value,
-            id: el.p_id.value,
-            age: el.p_age.value,
-            gender: el.p_gender.value,
-            date: el.p_date.value,
-            ref: el.p_ref.value
-        };
-        state.selectedTests = Array.from(el.p_test.selectedOptions).map(opt => opt.value);
-
-        if (!state.patient.name || state.selectedTests.length === 0) {
-            showAlert("Please fill patient name and select tests.");
-            return;
-        }
-        show('form');
-        buildForm();
-        refreshPreview();
-    });
-
-    el.paramsArea.addEventListener('input', (e) => {
-        if (e.target.dataset.test && e.target.dataset.key) {
-            const { test, key } = e.target.dataset;
-            state.values[test][key] = e.target.value;
-            refreshPreview();
-        }
-    });
-
-    el.printReport.addEventListener('click', () => {
-        const printContent = el.previewContent.innerHTML;
-        const w = window.open('', '', 'width=900,height=650');
-        w.document.write(`<html><head><title>Lab Report</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"></head>
-        <body>${printContent}</body></html>`);
-        w.document.close();
-        w.print();
-    });
-
-    el.backToHome.addEventListener('click', () => {
-        show('home');
-    });
-
-    el.clearValues.addEventListener('click', () => {
-        state = { patient: {}, selectedTests: [], values: {} };
-        el.p_name.value = '';
-        el.p_id.value = '';
-        el.p_age.value = '';
-        el.p_gender.value = '';
-        el.p_date.value = '';
-        el.p_ref.value = '';
-        el.previewContent.innerHTML = `<p class="text-muted text-center">Your report preview will appear here.</p>`;
-        show('home');
-    });
-</script>
+    </script>
 </body>
+
 </html>
